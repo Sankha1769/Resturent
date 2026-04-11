@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Spice Route | Pan-Asian Heritage Kolkata</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#fffbeb',
+                            100: '#fef3c7',
+                            200: '#fde68a',
+                            300: '#fcd34d',
+                            400: '#fbbf24',
+                            500: '#d97706',
+                            600: '#b45309',
+                            700: '#92400e',
+                            800: '#78350f',
+                            900: '#451a03',
+                        }
+                    },
+                    animation: {
+                        'marquee': 'marquee 40s linear infinite',
+                        'steam': 'steam 2s infinite ease-in-out',
+                    },
+                    keyframes: {
+                        marquee: {
+                            '0%': { transform: 'translateX(0%)' },
+                            '100%': { transform: 'translateX(-50%)' },
+                        },
+                        steam: {
+                            '0%, 100%': { transform: 'translateY(0) scaleX(1)', opacity: 0.4 },
+                            '50%': { transform: 'translateY(-4px) scaleX(1.1)', opacity: 1 },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root { --bg-dark: #050505; }
+        
+        /* Custom Cursor Styles - Restaurant Edition */
+        @media (pointer: fine) {
+            * { cursor: none !important; }
+            
+            .custom-cursor-dot {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 32px;
+                height: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #d97706; /* brand-500 */
+                pointer-events: none;
+                z-index: 9999;
+                transform: translate(-50%, -50%);
+                transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s;
+                filter: drop-shadow(0 0 8px rgba(217, 119, 6, 0.6));
+            }
+            
+            .custom-cursor-outline {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 54px;
+                height: 54px;
+                border: 1px solid rgba(217, 119, 6, 0.3); /* brand-500 */
+                background: radial-gradient(circle, rgba(217,119,6,0.05) 0%, transparent 70%);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 9998;
+                transform: translate(-50%, -50%);
+                /* Representing a fine-dining plate */
+                box-shadow: inset 0 0 10px rgba(217, 119, 6, 0.1);
+            }
+
+            /* Steam animation for the bowl icon */
+            .steam-line {
+                animation: steam 2s infinite ease-in-out;
+            }
+
+            /* Hover states */
+            .custom-cursor-dot.hover {
+                transform: translate(-50%, -50%) scale(1.4);
+                color: #fff;
+                filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.8));
+            }
+
+            .custom-cursor-outline.hover {
+                width: 80px;
+                height: 80px;
+                border-color: rgba(217, 119, 6, 0.8);
+                background-color: rgba(217, 119, 6, 0.1);
+                backdrop-filter: blur(4px);
+            }
+        }
+
+        body { background-color: var(--bg-dark); color: #e5e7eb; -webkit-font-smoothing: antialiased; }
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 1s cubic-bezier(0.22, 1, 0.36, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .sticky-container { height: 600vh; }
+        #dish-positioner { will-change: left, transform; transition: left 1.2s cubic-bezier(0.25, 1, 0.5, 1); }
+        .dish-rotation-container { will-change: transform; transform-origin: center center; transition: transform 0.1s linear; }
+        .dish-layer { transition: opacity 0.8s ease-in-out; will-change: opacity; filter: drop-shadow(0 30px 60px rgba(0,0,0,0.8)); }
+        .hero-title { font-size: clamp(3rem, 12vw, 10rem); line-height: 0.85; }
+        .glass-card { background: rgba(255, 255, 255, 0.01); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .section-indicator { width: 2px; height: 30px; background: rgba(217, 119, 6, 0.2); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .section-indicator-active { background: #d97706; height: 60px; }
+        #mobile-menu { transform: translateX(-100%); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        #mobile-menu.active { transform: translateX(0); }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #d97706; border-radius: 10px; }
+        .marquee-container { mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent); }
+    </style>
+</head>
+<body class="font-sans overflow-x-hidden selection:bg-brand-500 selection:text-white">
+
+    <!-- Custom Restaurant Cursor -->
+    <div class="custom-cursor-dot hidden md:flex" id="cursor-dot">
+        <!-- Minimalist Steaming Bowl SVG -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 21a9 9 0 0 0 9-9H3a9 9 0 0 0 9 9Z" fill="currentColor" fill-opacity="0.1"/>
+            <path d="M7 21h10"/>
+            <path class="steam-line" d="M12 3v3" style="animation-delay: 0.2s"/>
+            <path class="steam-line" d="M7 6v2" style="animation-delay: 0.5s"/>
+            <path class="steam-line" d="M17 6v2" style="animation-delay: 0.8s"/>
+        </svg>
+    </div>
+    <div class="custom-cursor-outline hidden md:block" id="cursor-outline"></div>
+
+    <nav id="navbar" class="fixed w-full z-[100] transition-all duration-700 py-6 md:py-10">
+        <div class="container mx-auto px-6 md:px-10 lg:px-20 flex justify-between items-center">
+            <a href="#" id="brand-logo" class="font-serif text-2xl md:text-3xl font-black text-white flex items-center gap-3 md:gap-4 group z-[101] cursor-hover-target">
+                <div class="p-2 bg-brand-500 rounded-xl group-hover:scale-110 transition-transform duration-500">
+                    <i id="logo-icon" data-lucide="utensils" class="text-white w-6 h-6 md:w-7 md:h-7 transition-transform duration-300"></i>
+                </div>
+                <span class="tracking-tighter uppercase italic">Spice Route</span>
+            </a>
+            
+            <div class="hidden lg:flex items-center space-x-12">
+                <a href="menu.html" class="text-[10px] uppercase tracking-[0.5em] font-black hover:text-brand-500 transition-colors cursor-hover-target">Menu</a>
+                <a href="service.html" class="text-[10px] uppercase tracking-[0.5em] font-black hover:text-brand-500 transition-colors cursor-hover-target">Services</a>
+                <a href="contact.html" class="bg-brand-500 text-white px-10 py-4 rounded-full text-[10px] uppercase tracking-[0.4em] font-black hover:bg-brand-600 transition-all shadow-2xl shadow-brand-500/30 cursor-hover-target">Reservation</a>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="fixed top-0 left-0 bottom-0 w-[80%] max-w-sm bg-black/95 backdrop-blur-3xl z-[100] flex flex-col p-12 border-r border-white/5">
+            <div class="flex flex-col space-y-8 mt-24">
+                <a href="menu.html" class="mobile-link text-2xl uppercase tracking-[0.3em] font-black text-white hover:text-brand-500 transition-colors cursor-hover-target">Menu</a>
+                <a href="service.html" class="mobile-link text-2xl uppercase tracking-[0.3em] font-black text-white hover:text-brand-500 transition-colors cursor-hover-target">Services</a>
+                <a href="contact.html" class="mobile-link text-2xl uppercase tracking-[0.3em] font-black text-white hover:text-brand-500 transition-colors cursor-hover-target">Reservation</a>
+            </div>
+            <div class="mt-auto">
+                <p class="text-[9px] uppercase tracking-[0.4em] text-zinc-700">The Spice Route • Kolkata</p>
+            </div>
+        </div>
+        <div id="mobile-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[99] opacity-0 pointer-events-none transition-opacity duration-500"></div>
+    </nav>
+
+    <header id="home" class="relative min-h-[100svh] flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 opacity-20 pointer-events-none">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150vw] md:w-[100vw] h-[150vw] md:h-[100vw] bg-brand-500/10 blur-[120px] md:blur-[180px] rounded-full"></div>
+        </div>
+        <div class="container mx-auto px-6 md:px-10 relative z-10 text-center mt-16 md:mt-0">
+            <span class="text-brand-500 font-black tracking-[0.6em] md:tracking-[0.8em] uppercase text-[10px] md:text-xs block mb-8 md:mb-10 reveal">The Silk Road • Kolkata</span>
+            <h1 class="font-serif hero-title text-white font-black reveal" style="transition-delay: 100ms;">ANCIENT <br> & BOLD</h1>
+            <div class="max-w-2xl mx-auto mt-10 md:mt-16 reveal" style="transition-delay: 200ms;">
+                <p class="text-lg md:text-xl text-gray-400 font-light leading-relaxed">A cinematic exploration of spice and fire. Reimagining the historic routes of Asia through the contemporary lens of Kolkata.</p>
+            </div>
+            <div class="mt-16 reveal animate-bounce" style="transition-delay: 400ms;">
+                <a href="#showcase-start" class="text-white/30 hover:text-white transition-colors flex justify-center cursor-hover-target"><i data-lucide="chevron-down" class="w-10 h-10"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <div id="showcase-start"></div>
+    <section id="menu" class="sticky-container relative bg-black">
+        <div class="sticky top-0 h-[100svh] w-full overflow-hidden">
+            <div id="dish-positioner" class="absolute top-[35%] lg:top-1/2 left-1/2 lg:left-[75%] -translate-x-1/2 lg:-translate-y-1/2 w-[60%] md:w-[40%] lg:w-[35%] max-w-[500px] aspect-square z-10 cursor-hover-target">
+                <div id="dish-glow" class="absolute inset-0 bg-brand-500/15 blur-[80px] md:blur-[120px] rounded-full transition-colors duration-700 scale-[1.3]"></div>
+                <div id="dish-rotation-container" class="relative w-full h-full dish-rotation-container">
+                    <img id="dish-layer-1" src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?q=80&w=1200&auto=format&fit=crop" class="dish-layer absolute inset-0 w-full h-full object-cover rounded-full border-[8px] md:border-[12px] border-white/5 opacity-100">
+                    <img id="dish-layer-2" src="https://images.unsplash.com/photo-1589302168068-964664d93dc0?q=80&w=1200&auto=format&fit=crop" class="dish-layer absolute inset-0 w-full h-full object-cover rounded-full border-[8px] md:border-[12px] border-white/5 opacity-0">
+                    <img id="dish-layer-3" src="https://www.licious.in/blog/wp-content/uploads/2022/04/shutterstock_1498639676-min.jpg" class="dish-layer absolute inset-0 w-full h-full object-cover rounded-full border-[8px] md:border-[12px] border-white/5 opacity-0">
+                    <img id="dish-layer-4" src="https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?q=80&w=1200&auto=format&fit=crop" class="dish-layer absolute inset-0 w-full h-full object-cover rounded-full border-[8px] md:border-[12px] border-white/5 opacity-0">
+                    <img id="dish-layer-5" src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200&auto=format&fit=crop" class="dish-layer absolute inset-0 w-full h-full object-cover rounded-full border-[8px] md:border-[12px] border-white/5 opacity-0">
+                </div>
+            </div>
+            <div id="text-content-1" class="absolute top-[75%] lg:top-1/2 left-1/2 lg:left-[25%] -translate-x-1/2 -translate-y-1/2 w-[85%] lg:w-[40%] text-center lg:text-left transition-all duration-700 pointer-events-auto opacity-100 translate-y-0 z-20">
+                <span class="text-brand-500 font-black tracking-[0.3em] lg:tracking-[0.5em] uppercase text-[10px] lg:text-xs mb-4 lg:mb-6 block">Curated 01</span>
+                <h2 class="font-serif text-5xl md:text-6xl lg:text-8xl text-white font-black mb-4 lg:mb-8 leading-tight lg:leading-none whitespace-nowrap">Fusion <br class="hidden lg:block"> Burger</h2>
+                <p class="text-sm md:text-lg lg:text-xl text-gray-400 font-light leading-relaxed max-w-md mx-auto lg:mx-0 mb-8 lg:mb-10">Sriracha-glazed premium beef, Asian slaw, and hand-forged charcoal buns.</p>
+                <div class="flex items-center justify-center lg:justify-start gap-6 lg:gap-8 cursor-hover-target">
+                    <span class="text-2xl lg:text-4xl font-serif text-white font-bold">₹380</span>
+                    <div class="h-px w-10 lg:w-20 bg-white/20"></div>
+                    <span class="text-[9px] lg:text-[10px] uppercase tracking-widest text-brand-500 font-black">Crafted</span>
+                </div>
+            </div>
+
+            <div id="text-content-2" class="absolute top-[75%] lg:top-1/2 left-1/2 lg:left-[75%] -translate-x-1/2 -translate-y-1/2 w-[85%] lg:w-[40%] text-center lg:text-left transition-all duration-700 pointer-events-none opacity-0 translate-y-12 z-20">
+                <span class="text-brand-500 font-black tracking-[0.3em] lg:tracking-[0.5em] uppercase text-[10px] lg:text-xs mb-4 lg:mb-6 block">Curated 02</span>
+                <h2 class="font-serif text-5xl md:text-6xl lg:text-8xl text-white font-black mb-4 lg:mb-8 leading-tight lg:leading-none whitespace-nowrap">Awadhi <br class="hidden lg:block"> Biryani</h2>
+                <p class="text-sm md:text-lg lg:text-xl text-gray-400 font-light leading-relaxed max-w-md mx-auto lg:mx-0 mb-8 lg:mb-10">Fragrant grains layered with heritage spices and slow-braised tender meat.</p>
+                <div class="flex items-center justify-center lg:justify-start gap-6 lg:gap-8 cursor-hover-target">
+                    <span class="text-2xl lg:text-4xl font-serif text-white font-bold">₹420</span>
+                    <div class="h-px w-10 lg:w-20 bg-white/20"></div>
+                    <span class="text-[9px] lg:text-[10px] uppercase tracking-widest text-brand-500 font-black">Soulful</span>
+                </div>
+            </div>
+            <div id="text-content-3" class="absolute top-[75%] lg:top-1/2 left-1/2 lg:left-[25%] -translate-x-1/2 -translate-y-1/2 w-[85%] lg:w-[40%] text-center lg:text-left transition-all duration-700 pointer-events-none opacity-0 translate-y-12 z-20">
+                <span class="text-brand-500 font-black tracking-[0.3em] lg:tracking-[0.5em] uppercase text-[10px] lg:text-xs mb-4 lg:mb-6 block">Curated 03</span>
+                <h2 class="font-serif text-5xl md:text-6xl lg:text-8xl text-white font-black mb-4 lg:mb-8 leading-tight lg:leading-none whitespace-nowrap">Chilli <br class="hidden lg:block"> Chicken</h2>
+                <p class="text-sm md:text-lg lg:text-xl text-gray-400 font-light leading-relaxed max-w-md mx-auto lg:mx-0 mb-8 lg:mb-10">Wok-kissed poultry in a dark soy and charred green chilli reduction.</p>
+                <div class="flex items-center justify-center lg:justify-start gap-6 lg:gap-8 cursor-hover-target">
+                    <span class="text-2xl lg:text-4xl font-serif text-white font-bold">₹350</span>
+                    <div class="h-px w-10 lg:w-20 bg-white/20"></div>
+                    <span class="text-[9px] lg:text-[10px] uppercase tracking-widest text-brand-500 font-black">Classic</span>
+                </div>
+            </div>
+            <div id="text-content-4" class="absolute top-[75%] lg:top-1/2 left-1/2 lg:left-[75%] -translate-x-1/2 -translate-y-1/2 w-[85%] lg:w-[40%] text-center lg:text-left transition-all duration-700 pointer-events-none opacity-0 translate-y-12 z-20">
+                <span class="text-brand-500 font-black tracking-[0.3em] lg:tracking-[0.5em] uppercase text-[10px] lg:text-xs mb-4 lg:mb-6 block">Curated 04</span>
+                <h2 class="font-serif text-5xl md:text-6xl lg:text-8xl text-white font-black mb-4 lg:mb-8 leading-tight lg:leading-none whitespace-nowrap">Lemon <br class="hidden lg:block"> Chicken</h2>
+                <p class="text-sm md:text-lg lg:text-xl text-gray-400 font-light leading-relaxed max-w-md mx-auto lg:mx-0 mb-8 lg:mb-10">Zesty, vibrant citrus reduction over golden-fried corn-fed chicken.</p>
+                <div class="flex items-center justify-center lg:justify-start gap-6 lg:gap-8 cursor-hover-target">
+                    <span class="text-2xl lg:text-4xl font-serif text-white font-bold">₹380</span>
+                    <div class="h-px w-10 lg:w-20 bg-white/20"></div>
+                    <span class="text-[9px] lg:text-[10px] uppercase tracking-widest text-brand-500 font-black">Fresh</span>
+                </div>
+            </div>
+            <div id="text-content-5" class="absolute top-[75%] lg:top-1/2 left-1/2 lg:left-[25%] -translate-x-1/2 -translate-y-1/2 w-[85%] lg:w-[40%] text-center lg:text-left transition-all duration-700 pointer-events-none opacity-0 translate-y-12 z-20">
+                <span class="text-brand-500 font-black tracking-[0.3em] lg:tracking-[0.5em] uppercase text-[10px] lg:text-xs mb-4 lg:mb-6 block">Curated 05</span>
+                <h2 class="font-serif text-5xl md:text-6xl lg:text-8xl text-white font-black mb-4 lg:mb-8 leading-tight lg:leading-none whitespace-nowrap">Szechuan <br class="hidden lg:block"> Lamb</h2>
+                <p class="text-sm md:text-lg lg:text-xl text-gray-400 font-light leading-relaxed max-w-md mx-auto lg:mx-0 mb-8 lg:mb-10">Numbing peppers and dried chillies over slow-cooked shredded lamb.</p>
+                <div class="flex items-center justify-center lg:justify-start gap-6 lg:gap-8 cursor-hover-target">
+                    <span class="text-2xl lg:text-4xl font-serif text-white font-bold">₹490</span>
+                    <div class="h-px w-10 lg:w-20 bg-white/20"></div>
+                    <span class="text-[9px] lg:text-[10px] uppercase tracking-widest text-brand-500 font-black">Fiery</span>
+                </div>
+            </div>
+            <div class="absolute right-4 md:right-10 top-1/2 -translate-y-1/2 flex flex-col gap-3 md:gap-4 items-center z-30">
+                <div id="dot-1" class="section-indicator section-indicator-active"></div>
+                <div id="dot-2" class="section-indicator"></div>
+                <div id="dot-3" class="section-indicator"></div>
+                <div id="dot-4" class="section-indicator"></div>
+                <div id="dot-5" class="section-indicator"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="py-32 md:py-48 bg-black relative">
+        <div class="container mx-auto px-6 md:px-10 lg:px-20 grid xl:grid-cols-2 gap-16 lg:gap-32 items-center">
+            <div class="relative reveal order-2 xl:order-1 cursor-hover-target">
+                <div class="absolute -inset-4 md:-inset-10 bg-brand-500/5 blur-[60px] md:blur-[100px] rounded-full"></div>
+                <img src="https://images.unsplash.com/photo-1552611052-33e04de081de?auto=format&fit=crop&w=1000&q=80" alt="Atmosphere" class="relative z-10 rounded-[2rem] md:rounded-[4rem] border border-white/5 shadow-2xl transition-all duration-1000 w-full aspect-video object-cover">
+            </div>
+            <div class="reveal order-1 xl:order-2">
+                <h2 class="font-serif text-5xl md:text-7xl lg:text-9xl text-white font-black mb-8 md:mb-12 leading-none tracking-tighter uppercase">THE <br> SOUL.</h2>
+                <div class="space-y-6 md:space-y-10 text-lg md:text-xl text-gray-400 font-light leading-relaxed">
+                    <p>At The Spice Route, we believe in the transformative power of spice. Each blend is ground in-house, following centuries-old traditions that defined the culinary connections across Asia.</p>
+                    <p>Our kitchen is a theater where extreme heat meets artisanal heritage, crafting a dining experience that is as bold as it is authentic.</p>
+                </div>
+                <div class="mt-12 md:mt-20 flex flex-col sm:flex-row items-center gap-6 md:gap-12">
+                    <div class="glass-card p-8 md:p-10 rounded-[2rem] md:rounded-[3rem] w-full sm:flex-1 text-center sm:text-left cursor-hover-target">
+                        <p class="text-brand-500 font-black text-4xl md:text-5xl mb-2">100%</p>
+                        <p class="text-[10px] md:text-xs uppercase tracking-widest text-white font-bold">House Ground Spice</p>
+                    </div>
+                    <div class="glass-card p-8 md:p-10 rounded-[2rem] md:rounded-[3rem] w-full sm:flex-1 text-center sm:text-left cursor-hover-target">
+                        <p class="text-brand-500 font-black text-4xl md:text-5xl mb-2">4.9</p>
+                        <p class="text-[10px] md:text-xs uppercase tracking-widest text-white font-bold">Critics Choice</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services-marquee" class="py-24 bg-black overflow-hidden border-y border-white/5">
+        <div class="container mx-auto px-6 mb-16"><h3 class="text-brand-500 font-black tracking-[0.5em] uppercase text-xs text-center">Our Offerings</h3></div>
+        <div class="marquee-container flex whitespace-nowrap overflow-hidden py-10">
+            <div class="flex animate-marquee gap-10">
+                <a href="service.html" class="glass-card p-6 rounded-3xl w-72 md:w-80 shrink-0 group cursor-hover-target">
+                    <img src="Private_Booking.png" class="w-full h-48 object-cover rounded-2xl mb-6 transition-all duration-700">
+                    <h4 class="text-white font-bold tracking-widest uppercase text-xs">Private reservation</h4>
+                </a>
+                <a href="service.html" class="glass-card p-6 rounded-3xl w-72 md:w-80 shrink-0 group cursor-hover-target">
+                    <img src="Buffet.jpg" class="w-full h-48 object-cover rounded-2xl mb-6 transition-all duration-700">
+                    <h4 class="text-white font-bold tracking-widest uppercase text-xs">Buffet</h4>
+                </a>
+                <a href="service.html" class="glass-card p-6 rounded-3xl w-72 md:w-80 shrink-0 group cursor-hover-target">
+                    <img src="Candel_Light.png" class="w-full h-48 object-cover rounded-2xl mb-6 transition-all duration-700">
+                    <h4 class="text-white font-bold tracking-widest uppercase text-xs">Candle Light Dinner</h4>
+                </a>
+                <a href="service.html" class="glass-card p-6 rounded-3xl w-72 md:w-80 shrink-0 group cursor-hover-target">
+                    <img src="Couple.png" class="w-full h-48 object-cover rounded-2xl mb-6 transition-all duration-700">
+                    <h4 class="text-white font-bold tracking-widest uppercase text-xs">Couple theme table</h4>
+                </a>
+                <a href="service.html" class="glass-card p-6 rounded-3xl w-72 md:w-80 shrink-0 group cursor-hover-target">
+                    <img src="Birthday.png" class="w-full h-48 object-cover rounded-2xl mb-6 transition-all duration-700">
+                    <h4 class="text-white font-bold tracking-widest uppercase text-xs">Birthday theme</h4>
+                </a>
+                <a href="service.html" class="glass-card p-6 rounded-3xl w-72 md:w-80 shrink-0 group cursor-hover-target">
+                    <img src="Friends theme.png" class="w-full h-48 object-cover rounded-2xl mb-6 transition-all duration-700">
+                    <h4 class="text-white font-bold tracking-widest uppercase text-xs">Friend theme</h4>
+                </a>
+                <a href="service.html" class="glass-card p-6 rounded-3xl w-72 md:w-80 shrink-0 group cursor-hover-target">
+                    <img src="Roof_top.png" class="w-full h-48 object-cover rounded-2xl mb-6 transition-all duration-700">
+                    <h4 class="text-white font-bold tracking-widest uppercase text-xs">Rooftop Lounge</h4>
+                </a>
+                <a href="service.html" class="glass-card p-6 rounded-3xl w-72 md:w-80 shrink-0 group cursor-hover-target">
+                    <img src="Solo.jpg" class="w-full h-48 object-cover rounded-2xl mb-6 transition-all duration-700">
+                    <h4 class="text-white font-bold tracking-widest uppercase text-xs">Solo Theme</h4>
+                </a>
+                <a href="service.html" class="glass-card p-6 rounded-3xl w-72 md:w-80 shrink-0 group cursor-hover-target">
+                    <img src="Bussiness.png" class="w-full h-48 object-cover rounded-2xl mb-6 transition-all duration-700">
+                    <h4 class="text-white font-bold tracking-widest uppercase text-xs">Business theme</h4>
+                </a>
+                <a href="service.html" class="glass-card p-6 rounded-3xl w-72 md:w-80 shrink-0 group cursor-hover-target">
+                    <img src="Family.png" class="w-full h-48 object-cover rounded-2xl mb-6 transition-all duration-700">
+                    <h4 class="text-white font-bold tracking-widest uppercase text-xs">Family theme</h4>
+                </a>
+            </div>
+
+            <div class="flex animate-marquee gap-10" aria-hidden="true">
+                <a href="service.html" class="glass-card p-6 rounded-3xl w-72 md:w-80 shrink-0 group cursor-hover-target">
+                    <img src="Private_Booking.png" class="w-full h-48 object-cover rounded-2xl mb-6 transition-all duration-700">
+                    <h4 class="text-white font-bold tracking-widest uppercase text-xs">Private Dining</h4>
+                </a>
+                <a href="service.html" class="glass-card p-6 rounded-3xl w-72 md:w-80 shrink-0 group cursor-hover-target">
+                    <img src="Buffet.jpg" class="w-full h-48 object-cover rounded-2xl mb-6 transition-all duration-700">
+                    <h4 class="text-white font-bold tracking-widest uppercase text-xs">Buffet</h4>
+                </a>
+                <a href="service.html" class="glass-card p-6 rounded-3xl w-72 md:w-80 shrink-0 group cursor-hover-target">
+                    <img src="Candel_Light.png" class="w-full h-48 object-cover rounded-2xl mb-6 transition-all duration-700">
+                    <h4 class="text-white font-bold tracking-widest uppercase text-xs">Candle Light Dinner</h4>
+                </a>
+                <a href="service.html" class="glass-card p-6 rounded-3xl w-72 md:w-80 shrink-0 group cursor-hover-target">
+                    <img src="Couple.png" class="w-full h-48 object-cover rounded-2xl mb-6 transition-all duration-700">
+                    <h4 class="text-white font-bold tracking-widest uppercase text-xs">Couple theme table</h4>
+                </a>
+                <a href="service.html" class="glass-card p-6 rounded-3xl w-72 md:w-80 shrink-0 group cursor-hover-target">
+                    <img src="Birthday.png" class="w-full h-48 object-cover rounded-2xl mb-6 transition-all duration-700">
+                    <h4 class="text-white font-bold tracking-widest uppercase text-xs">Birthday theme</h4>
+                </a>
+                <a href="service.html" class="glass-card p-6 rounded-3xl w-72 md:w-80 shrink-0 group cursor-hover-target">
+                    <img src="Friends theme.png" class="w-full h-48 object-cover rounded-2xl mb-6 transition-all duration-700">
+                    <h4 class="text-white font-bold tracking-widest uppercase text-xs">Friend theme</h4>
+                </a>
+                <a href="service.html" class="glass-card p-6 rounded-3xl w-72 md:w-80 shrink-0 group cursor-hover-target">
+                    <img src="Roof_top.png" class="w-full h-48 object-cover rounded-2xl mb-6 transition-all duration-700">
+                    <h4 class="text-white font-bold tracking-widest uppercase text-xs">Rooftop Lounge</h4>
+                </a>
+                <a href="service.html" class="glass-card p-6 rounded-3xl w-72 md:w-80 shrink-0 group cursor-hover-target">
+                    <img src="Solo.jpg" class="w-full h-48 object-cover rounded-2xl mb-6 transition-all duration-700">
+                    <h4 class="text-white font-bold tracking-widest uppercase text-xs">Solo Theme</h4>
+                </a>
+                <a href="service.html" class="glass-card p-6 rounded-3xl w-72 md:w-80 shrink-0 group cursor-hover-target">
+                    <img src="Bussiness.png" class="w-full h-48 object-cover rounded-2xl mb-6 transition-all duration-700">
+                    <h4 class="text-white font-bold tracking-widest uppercase text-xs">Business theme</h4>
+                </a>
+                <a href="service.html" class="glass-card p-6 rounded-3xl w-72 md:w-80 shrink-0 group cursor-hover-target">
+                    <img src="Family.png" class="w-full h-48 object-cover rounded-2xl mb-6 transition-all duration-700">
+                    <h4 class="text-white font-bold tracking-widest uppercase text-xs">Family theme</h4>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="reservations" class="py-32 md:py-48 bg-[#030303]">
+        <div class="container mx-auto px-6 md:px-10 max-w-7xl">
+            <div class="glass-card rounded-[2.5rem] md:rounded-[5rem] p-8 md:p-16 lg:p-32 relative overflow-hidden reveal">
+                <div class="grid xl:grid-cols-2 gap-16 lg:gap-32 relative z-10 items-center">
+                    <div>
+                        <h2 class="font-serif text-5xl md:text-7xl text-white font-black mb-8 md:mb-12 uppercase">Book <br> Passage.</h2>
+                        <p class="text-gray-400 text-lg md:text-xl mb-12 md:mb-16 leading-relaxed font-light">Join us for a journey of the senses. Secure your seat at our table through our concierge service.</p>
+                        <div class="space-y-6 md:space-y-8">
+                            <div class="flex items-center gap-6 group cursor-hover-target">
+                                <div class="w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-full bg-white/5 flex items-center justify-center text-brand-500 group-hover:bg-brand-500 group-hover:text-white transition-all">
+                                    <i data-lucide="phone" class="w-5 h-5 md:w-6 md:h-6"></i>
+                                </div>
+                                <span class="text-white text-lg md:text-xl font-bold tracking-tight">+91 98765 43210</span>
+                            </div>
+                            <div class="flex items-center gap-6 group cursor-hover-target">
+                                <div class="w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-full bg-white/5 flex items-center justify-center text-brand-500 group-hover:bg-brand-500 group-hover:text-white transition-all">
+                                    <i data-lucide="map-pin" class="w-5 h-5 md:w-6 md:h-6"></i>
+                                </div>
+                                <span class="text-white text-lg md:text-xl font-bold tracking-tight">Food District, Kolkata</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-center justify-center text-center">
+                        <div class="p-1 w-full max-w-md">
+                            <a href="contact.html" class="block w-full bg-brand-500 text-white font-black uppercase tracking-[0.3em] md:tracking-[0.5em] py-10 md:py-16 rounded-[1.5rem] md:rounded-3xl hover:bg-brand-600 transition-all shadow-xl md:shadow-2xl shadow-brand-500/20 text-xs md:text-sm active:scale-[0.98] group relative overflow-hidden cursor-hover-target">
+                                <span class="relative z-10">Reserve a Table</span>
+                                <div class="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+                            </a>
+                            <p class="mt-8 text-[10px] md:text-xs text-gray-500 uppercase tracking-widest font-black">Fastest Way to Book</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-black py-20 md:py-32 border-t border-white/5">
+        <div class="container mx-auto px-6 md:px-10 lg:px-20 text-center">
+            <a href="#" class="font-serif text-4xl md:text-5xl font-black text-white mb-10 md:mb-12 inline-block tracking-tighter italic uppercase cursor-hover-target">Spice Route</a>
+            <p class="text-xs md:text-sm uppercase tracking-[0.3em] font-medium text-gray-500 italic max-w-xl mx-auto leading-loose">"The spice is just the beginning; the real heat is in the company you keep."</p>
+            <p class="mt-16 md:mt-20 text-[9px] md:text-[10px] uppercase tracking-[0.4em] font-black text-zinc-900">© 2026 The Spice Route. Kolkata.</p>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        const cursorDot = document.getElementById('cursor-dot');
+        const cursorOutline = document.getElementById('cursor-outline');
+        
+        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+        if (!isTouchDevice) {
+            window.addEventListener('mousemove', (e) => {
+                const posX = e.clientX;
+                const posY = e.clientY;
+
+                cursorDot.style.left = `${posX}px`;
+                cursorDot.style.top = `${posY}px`;
+
+                cursorOutline.animate({
+                    left: `${posX}px`,
+                    top: `${posY}px`
+                }, { duration: 600, fill: "forwards", easing: 'cubic-bezier(0.25, 1, 0.5, 1)' });
+            });
+
+            const hoverTargets = document.querySelectorAll('.cursor-hover-target, a, button, .glass-card');
+            hoverTargets.forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    cursorDot.classList.add('hover');
+                    cursorOutline.classList.add('hover');
+                });
+                el.addEventListener('mouseleave', () => {
+                    cursorDot.classList.remove('hover');
+                    cursorOutline.classList.remove('hover');
+                });
+            });
+        }
+
+        const brandLogo = document.getElementById('brand-logo');
+        const logoIcon = document.getElementById('logo-icon');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileOverlay = document.getElementById('mobile-overlay');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+        let isMenuOpen = false;
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                mobileMenu.classList.add('active');
+                mobileOverlay.classList.add('opacity-100', 'pointer-events-auto');
+                logoIcon.setAttribute('data-lucide', 'x');
+                document.body.style.overflow = 'hidden'; 
+            } else {
+                mobileMenu.classList.remove('active');
+                mobileOverlay.classList.remove('opacity-100', 'pointer-events-auto');
+                logoIcon.setAttribute('data-lucide', 'utensils');
+                document.body.style.overflow = '';
+            }
+            lucide.createIcons();
+        }
+
+        brandLogo.addEventListener('click', (e) => {
+            if (window.innerWidth < 1024) {
+                e.preventDefault(); 
+                toggleMenu();
+            }
+        });
+
+        mobileOverlay.addEventListener('click', toggleMenu);
+        mobileLinks.forEach(link => link.addEventListener('click', () => {
+            if (isMenuOpen) toggleMenu();
+        }));
+
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-black/90', 'backdrop-blur-xl', 'py-4', 'md:py-6', 'border-b', 'border-white/5');
+            } else {
+                navbar.classList.remove('bg-black/90', 'backdrop-blur-xl', 'py-4', 'md:py-6', 'border-b', 'border-white/5');
+            }
+        }, { passive: true });
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    revealObserver.unobserve(entry.target); 
+                }
+            });
+        }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+        
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        const dishRotationContainer = document.getElementById('dish-rotation-container');
+        const dishPositioner = document.getElementById('dish-positioner');
+        const dishGlow = document.getElementById('dish-glow');
+        const stickySection = document.querySelector('.sticky-container');
+        const layers = [document.getElementById('dish-layer-1'), document.getElementById('dish-layer-2'), document.getElementById('dish-layer-3'), document.getElementById('dish-layer-4'), document.getElementById('dish-layer-5')];
+        const contents = [document.getElementById('text-content-1'), document.getElementById('text-content-2'), document.getElementById('text-content-3'), document.getElementById('text-content-4'), document.getElementById('text-content-5')];
+        const dots = [document.getElementById('dot-1'), document.getElementById('dot-2'), document.getElementById('dot-3'), document.getElementById('dot-4'), document.getElementById('dot-5')];
+
+        let ticking = false;
+        let currentIndex = -1;
+
+        function updateScrollAnimation() {
+            const rect = stickySection.getBoundingClientRect();
+            const totalHeight = stickySection.offsetHeight - window.innerHeight;
+            let progress = Math.min(Math.max(-rect.top / totalHeight, 0), 1);
+            const rotation = progress * 1440; 
+            const numStages = 5;
+            const stageSize = 1 / numStages;
+            let currentStage = Math.floor(progress / stageSize);
+            if (currentStage >= numStages) currentStage = numStages - 1;
+            let stageProgress = (progress % stageSize) / stageSize;
+            const distanceToCenter = Math.min(stageProgress, 1 - stageProgress);
+            const scale = 0.85 + (distanceToCenter * 0.3); 
+            dishRotationContainer.style.transform = `rotate(${rotation}deg) scale(${scale})`;
+
+            if (currentStage !== currentIndex) {
+                currentIndex = currentStage;
+                const isDesktop = window.innerWidth >= 1024;
+                if (isDesktop) {
+                    dishPositioner.style.left = currentIndex % 2 === 0 ? '75%' : '25%';
+                    dishPositioner.style.top = '50%';
+                } else {
+                    dishPositioner.style.left = '50%';
+                    dishPositioner.style.top = '35%';
+                }
+                layers.forEach((layer, i) => { layer.style.opacity = i === currentIndex ? '1' : '0'; });
+                contents.forEach((c, i) => {
+                    if (i === currentIndex) {
+                        c.style.opacity = '1';
+                        c.style.transform = 'translateY(-50%) translateX(-50%)';
+                        c.style.pointerEvents = 'auto';
+                    } else {
+                        c.style.opacity = '0';
+                        c.style.transform = 'translateY(calc(-50% + 40px)) translateX(-50%)';
+                        c.style.pointerEvents = 'none';
+                    }
+                });
+                const glowColors = ['rgba(217, 119, 6, 0.15)', 'rgba(180, 83, 9, 0.15)', 'rgba(146, 64, 14, 0.15)', 'rgba(120, 53, 15, 0.15)', 'rgba(69, 26, 3, 0.15)'];
+                dishGlow.style.background = glowColors[currentIndex];
+                dots.forEach((d, i) => {
+                    if (i === currentIndex) d.classList.add('section-indicator-active');
+                    else d.classList.remove('section-indicator-active');
+                });
+            }
+            ticking = false;
+        }
+
+        updateScrollAnimation();
+        window.addEventListener('scroll', () => {
+            if (!ticking) { window.requestAnimationFrame(updateScrollAnimation); ticking = true; }
+        }, { passive: true });
+        window.addEventListener('resize', () => { currentIndex = -1; updateScrollAnimation(); });
+    </script>
+</body>
+</html>

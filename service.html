@@ -553,97 +553,124 @@ main {
     }
 }
 
+/* WIKIPEDIA MODAL STYLES */
 #detail-modal {
     display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
     background: #fff; z-index: 3000;
 }
+
 .modal-content.theme-wiki {
     width: 100%; height: 100vh; max-width: none; max-height: none;
     border: none; padding: 0; display: flex; flex-direction: column;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; 
-    overflow: hidden; background: #fff; box-shadow: none; color: #202122;
+    font-family: sans-serif; 
+    overflow: hidden; background: #fff; color: #202122;
 }
-.desktop-only { display: flex; }
-.mobile-only { display: none; }
 
 .wiki-topbar {
     height: 50px; border-bottom: 1px solid #a2a9b1; display: flex;
-    align-items: center; justify-content: space-between; padding: 0 1.5rem; background: #fff;
+    align-items: center; justify-content: space-between; padding: 0 1rem; background: #fff;
+    flex-shrink: 0;
 }
 .wiki-topbar-left { display: flex; align-items: center; gap: 1rem; }
-.wiki-hamburger { font-size: 1.5rem; color: #54595d; padding: 5px; }
-.wiki-logo-placeholder { display: flex; align-items: center; gap: 10px; }
+.wiki-hamburger { font-size: 1.5rem; color: #54595d; padding: 5px; cursor: pointer; }
+.wiki-logo-placeholder { display: flex; align-items: center; gap: 8px; }
 .wiki-logo-placeholder img { height: 35px; }
-.wiki-logo-text { font-family: 'Linux Libertine', 'Playfair Display', serif; font-size: 1.1rem; color: #000; }
+.wiki-logo-text { font-family: 'Linux Libertine', Georgia, serif; font-size: 1.4rem; color: #000; letter-spacing: -0.5px; }
 
 .wiki-topbar-search {
     display: flex; flex: 1; max-width: 550px; margin: 0 2rem; border: 1px solid #a2a9b1; border-radius: 2px; overflow: hidden;
+    height: 32px;
 }
 .wiki-topbar-search input {
-    flex: 1; padding: 8px 12px; border: none; outline: none; font-size: 0.9rem; background: #fff;
+    flex: 1; padding: 0 12px; border: none; outline: none; font-size: 0.85rem; background: #fff;
 }
 .wiki-topbar-search button {
-    padding: 0 15px; background: #f8f9fa; border: none; border-left: 1px solid #a2a9b1; font-weight: bold; font-size: 0.85rem;
+    padding: 0 15px; background: #f8f9fa; border: none; border-left: 1px solid #a2a9b1; font-weight: bold; font-size: 0.8rem;
+    cursor: pointer;
 }
 
 .wiki-topbar-right { display: flex; align-items: center; gap: 1rem; font-size: 0.85rem; }
 .wiki-topbar-right a { color: #3366cc; text-decoration: none; display: flex; align-items: center; gap: 5px; }
 .wiki-topbar-right .heart-icon { color: #d33; font-size: 1.2rem; }
-.wiki-close-x { font-size: 1.5rem; color: #54595d; padding-left: 15px; }
+.wiki-close-x { font-size: 1.2rem; color: #54595d; padding: 10px; cursor: pointer; border-left: 1px solid #eaecf0; margin-left: 5px; }
 
 .wiki-page-wrapper { display: flex; flex: 1; overflow: hidden; }
 .wiki-sidebar {
-    width: 176px; padding: 1.5rem 1rem; font-size: 0.85rem; flex-shrink: 0; background: #f8f9fa; overflow-y: auto; border-right: 1px solid #a2a9b1;
+    width: 176px; padding: 1.5rem 0.8rem; font-size: 0.85rem; flex-shrink: 0; background: #fff; overflow-y: auto;
 }
-.wiki-sidebar ul { list-style: none; padding: 0; margin-bottom: 1.5rem; border-bottom: 1px solid #a2a9b1; padding-bottom: 10px; }
-.wiki-sidebar li { margin-bottom: 10px; }
+.wiki-sidebar ul { list-style: none; padding: 0; margin-bottom: 1.5rem; border-bottom: 1px solid #eaecf0; padding-bottom: 10px; }
+.wiki-sidebar li { margin-bottom: 8px; }
 .wiki-sidebar a { color: #3366cc; text-decoration: none; }
+.wiki-sidebar b { color: #54595d; display: block; margin-bottom: 8px; }
 
 .wiki-main-col {
-    flex: 1; padding: 0; overflow-y: auto; background: #fff; display: flex; flex-direction: column;
+    flex: 1; overflow-y: auto; background: #fff; display: flex; flex-direction: column;
 }
 
 .wiki-tabs-bar {
-    display: flex; justify-content: space-between; padding: 15px 40px 0 40px; border-bottom: 1px solid #a2a9b1; font-size: 0.85rem; background: #fff;
+    display: flex; justify-content: space-between; padding: 12px 2.5rem 0 2.5rem; border-bottom: 1px solid #a2a9b1; font-size: 0.85rem; background: #fff;
+    flex-shrink: 0;
 }
-.wiki-tabs-left, .wiki-tabs-right { display: flex; gap: 20px; }
-.wiki-tabs-bar span { padding: 8px 2px; color: #3366cc; border-bottom: 3px solid transparent; }
+.wiki-tabs-left, .wiki-tabs-right { display: flex; gap: 15px; }
+.wiki-tabs-bar span { padding: 8px 5px; color: #3366cc; border-bottom: 3px solid transparent; cursor: pointer; }
 .wiki-tabs-bar span.active { color: #202122; border-bottom-color: #3366cc; font-weight: bold; }
 
-.wiki-article-container { padding: 1.5rem 2.5rem; max-width: 1200px; }
-.wiki-content-area .article-header { border-bottom: 1px solid #a2a9b1; padding-bottom: 5px; margin-bottom: 0.2rem; }
-.wiki-content-area h1 { font-family: 'Linux Libertine', 'Playfair Display', serif; font-size: 2.5rem; font-weight: normal; margin: 0; line-height: 1.2; }
-.wiki-content-area .tagline { font-size: 0.85rem; color: #54595d; margin: 5px 0 1.5rem 0; font-style: italic; }
+.wiki-article-container { padding: 1.5rem 2.5rem 5rem 2.5rem; max-width: 1200px; }
+.wiki-content-area .article-header { border-bottom: 1px solid #a2a9b1; padding-bottom: 3px; margin-bottom: 0.2rem; position: relative; }
+.wiki-content-area h1 { font-family: 'Linux Libertine', Georgia, serif; font-size: 2.4rem; font-weight: normal; margin: 0; line-height: 1.2; color: #000; }
+.wiki-content-area .tagline { font-size: 0.8rem; color: #54595d; margin: 4px 0 1.5rem 0; }
 
-.wiki-body { display: flex; gap: 2.5rem; align-items: flex-start; }
-.wiki-main-text { flex: 1; }
-.wiki-main-text p { margin-bottom: 1rem; line-height: 1.6; }
-.wiki-main-text h2 { font-family: 'Linux Libertine', 'Playfair Display', serif; font-size: 1.6rem; border-bottom: 1px solid #a2a9b1; margin: 1.5rem 0 1rem 0; font-weight: normal; }
+.wiki-body { display: block; position: relative; }
+
+/* Infobox styling - Floating right */
+.infobox { 
+    width: 300px; background: #f8f9fa; border: 1px solid #a2a9b1; padding: 0.5rem; 
+    float: right; margin: 0 0 1rem 1.5rem; font-size: 0.85rem; line-height: 1.5;
+}
+.infobox-title { 
+    font-weight: bold; text-align: center; font-size: 1.1rem; padding: 0.4rem; background: #eaecf0; 
+    margin-bottom: 8px; border-bottom: 1px solid #a2a9b1;
+}
+.infobox img { width: 100%; height: auto; display: block; margin-bottom: 6px; border: 1px solid #c8ccd1; }
+.infobox-caption { text-align: center; font-size: 0.75rem; color: #54595d; margin-bottom: 10px; font-style: italic; }
+.infobox table { width: 100%; border-collapse: collapse; }
+.infobox th { text-align: left; padding: 4px 8px; background: #eaecf0; width: 35%; border-bottom: 1px solid #fff; }
+.infobox td { padding: 4px 8px; border-bottom: 1px solid #eaecf0; }
+
+/* Contents box */
+.wiki-toc {
+    display: inline-block; background: #f8f9fa; border: 1px solid #a2a9b1; padding: 1rem; 
+    margin: 1.5rem 0; font-size: 0.85rem; min-width: 180px;
+}
+.toc-title { font-weight: bold; text-align: center; margin-bottom: 0.5rem; }
+.toc-list { list-style: none; }
+.toc-list li { margin-bottom: 4px; color: #3366cc; }
+
+.wiki-main-text { line-height: 1.6; font-size: 0.95rem; color: #202122; }
+.wiki-main-text p { margin-bottom: 1rem; }
+.wiki-main-text b { color: #000; }
+.wiki-main-text h2 { 
+    font-family: 'Linux Libertine', Georgia, serif; font-size: 1.5rem; border-bottom: 1px solid #a2a9b1; 
+    margin: 1.5rem 0 0.8rem 0; font-weight: normal; color: #000;
+}
 
 .wiki-appearance-panel {
     width: 200px; background: #fff; border-left: 1px solid #a2a9b1; padding: 1.5rem 1rem; flex-shrink: 0; font-size: 0.85rem; color: #202122;
 }
 .appearance-section { margin-bottom: 1.5rem; }
 .appearance-section h4 { font-weight: bold; margin-bottom: 10px; display: flex; justify-content: space-between; }
-.appearance-option { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.appearance-option { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; cursor: pointer; }
 
 @media (max-width: 950px) {
     .desktop-only { display: none !important; }
     .mobile-only { display: block; }
-    #detail-modal { background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 3000; padding: 1rem; }
-    .modal-content.theme-wiki { width: 100%; max-width: 1000px; height: auto; max-height: 90vh; background: #ffffff; padding: 2rem 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.2); display: block; overflow-y: auto; color: #333333; font-family: 'Inter', sans-serif; border-radius: 16px; position: relative; }
-    .theme-wiki .close-btn { position: absolute; right: 15px; top: 10px; color: #888888; font-size: 2.5rem; border: none; background: none; line-height: 1; z-index: 10; transition: color 0.3s; }
-    .theme-wiki .close-btn:hover { color: #333; }
-    .wiki-content-area .article-header { border-bottom: 1px solid #eaeaea; text-align: left; padding-bottom: 1rem; margin-bottom: 1.5rem; }
-    .wiki-content-area h1 { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; line-height: 1.2; color: #1a1a1a; margin: 0; }
-    .wiki-content-area .tagline { font-family: 'Inter', sans-serif; color: #ff5e3a; font-size: 0.8rem; margin-top: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; font-style: normal; }
-    .wiki-body { display: flex; flex-direction: column; gap: 1.5rem; }
-    .infobox { width: 100%; background: transparent; border: none; padding: 0; margin-bottom: 0.5rem; float: none; display: block; order: -1; }
-    .infobox .infobox-title, .infobox table { display: none; }
-    .infobox img { border: none; filter: none; width: 100%; height: auto; display: block; margin-bottom: 8px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-    .infobox-caption { font-family: 'Inter', sans-serif; font-style: italic; text-align: center; font-size: 0.85rem; color: #777777; }
-    .wiki-main-text { column-count: 1; text-align: left; font-family: 'Inter', sans-serif; font-size: 1rem; line-height: 1.7; color: #444444; }
-    .wiki-main-text h2 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: #1a1a1a; margin: 1.5rem 0 0.8rem; border-bottom: 1px solid #eaeaea; padding-bottom: 0.5rem; display: block; }
+    #detail-modal { background: #fff; display: none; overflow-y: auto; z-index: 3000; }
+    .modal-content.theme-wiki { height: auto; display: block; position: relative; padding-top: 50px; }
+    .theme-wiki .close-btn { position: fixed; right: 15px; top: 10px; color: #333; font-size: 2.2rem; border: none; background: #fff; line-height: 1; z-index: 3100; border-radius: 50%; width: 40px; height: 40px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+    .wiki-content-area { padding: 1rem; }
+    .wiki-content-area h1 { font-size: 1.8rem; }
+    .infobox { float: none; width: 100%; margin: 1rem 0; }
+    .wiki-main-text { font-size: 1rem; }
 }
 </style>
 </head>
@@ -771,9 +798,12 @@ main {
 
 <footer class="site-footer">&copy; 2026 THE SPICE ROUTE. ALL RIGHTS RESERVED.</footer>
 
+<!-- MODAL CONTENT -->
 <div id="detail-modal">
     <div class="modal-content theme-wiki">
         <button class="close-btn mobile-only" onclick="closeModal()">×</button>
+        
+        <!-- Wikipedia Top Bar -->
         <div class="wiki-topbar desktop-only">
             <div class="wiki-topbar-left">
                 <span class="wiki-hamburger">≡</span>
@@ -782,41 +812,75 @@ main {
                     <span class="wiki-logo-text">Wikipedia</span>
                 </div>
             </div>
-            <div class="wiki-topbar-search"><input type="text" placeholder="Search Wikipedia" readonly><button>Search</button></div>
+            <div class="wiki-topbar-search">
+                <input type="text" value="Spice Route Dining" readonly>
+                <button>Search</button>
+            </div>
             <div class="wiki-topbar-right">
-                <a href="#"><span class="heart-icon">♥</span> Donate</a><a href="#">Create account</a><a href="#">Log in</a>
+                <a href="#"><span class="heart-icon">♥</span> Donate</a>
+                <a href="#">Create account</a>
+                <a href="#">Log in</a>
                 <span class="wiki-close-x" onclick="closeModal()">✕</span>
             </div>
         </div>
+
         <div class="wiki-page-wrapper">
+            <!-- Sidebar -->
             <div class="wiki-sidebar desktop-only">
-                <ul><li><a href="#">Main page</a></li><li><a href="#">Contents</a></li><li><a href="#">Current events</a></li><li><a href="#">Random article</a></li><li><a href="#">About Wikipedia</a></li></ul>
-                <ul><li><b>Contribute</b></li><li><a href="#">Help</a></li><li><a href="#">Learn to edit</a></li><li><a href="#">Community portal</a></li></ul>
+                <ul>
+                    <li><a href="#">Main page</a></li>
+                    <li><a href="#">Contents</a></li>
+                    <li><a href="#">Current events</a></li>
+                    <li><a href="#">Random article</a></li>
+                    <li><a href="#">About Wikipedia</a></li>
+                </ul>
+                <b>Contribute</b>
+                <ul>
+                    <li><a href="#">Help</a></li>
+                    <li><a href="#">Learn to edit</a></li>
+                    <li><a href="#">Community portal</a></li>
+                    <li><a href="#">Recent changes</a></li>
+                </ul>
             </div>
+
+            <!-- Main Column -->
             <div class="wiki-main-col">
                 <div class="wiki-tabs-bar desktop-only">
-                    <div class="wiki-tabs-left"><span class="active">Main Page</span><span>Talk</span></div>
-                    <div class="wiki-tabs-right"><span class="active">Read</span><span>View source</span><span>View history</span></div>
+                    <div class="wiki-tabs-left">
+                        <span class="active">Article</span>
+                        <span>Talk</span>
+                    </div>
+                    <div class="wiki-tabs-right">
+                        <span class="active">Read</span>
+                        <span>Edit</span>
+                        <span>View history</span>
+                        <span>Tools</span>
+                    </div>
                 </div>
-                <div id="wiki-content" class="wiki-article-container"></div>
+                
+                <div id="wiki-content" class="wiki-article-container">
+                    <!-- Dynamic Content Injected Here -->
+                </div>
             </div>
+
+            <!-- Appearance Panel -->
             <div class="wiki-appearance-panel desktop-only">
                 <div class="appearance-section">
-                    <h4>Appearance <span style="font-weight: normal; color: #3366cc; font-size: 0.7rem;">hide</span></h4>
-                    <p style="color: #54595d; margin-bottom: 10px; font-size: 0.75rem;">Text</p>
+                    <h4>Appearance <span style="font-weight: normal; color: #3366cc; font-size: 0.7rem; cursor: pointer;">hide</span></h4>
+                    <p style="color: #54595d; margin-bottom: 8px; font-size: 0.75rem;">Text</p>
                     <label class="appearance-option"><input type="radio" name="text-size"> Small</label>
                     <label class="appearance-option"><input type="radio" name="text-size" checked> Standard</label>
                     <label class="appearance-option"><input type="radio" name="text-size"> Large</label>
                 </div>
                 <div class="appearance-section">
-                    <p style="color: #54595d; margin-bottom: 10px; font-size: 0.75rem;">Width</p>
+                    <p style="color: #54595d; margin-bottom: 8px; font-size: 0.75rem;">Width</p>
                     <label class="appearance-option"><input type="radio" name="width" checked> Standard</label>
                     <label class="appearance-option"><input type="radio" name="width"> Wide</label>
                 </div>
                 <div class="appearance-section">
-                    <p style="color: #54595d; margin-bottom: 10px; font-size: 0.75rem;">Color (beta)</p>
-                    <label class="appearance-option"><input type="radio" name="theme" checked> Light</label>
-                    <label class="appearance-option"><input type="radio" name="theme"> Dark</label>
+                    <p style="color: #54595d; margin-bottom: 8px; font-size: 0.75rem;">Color (beta)</p>
+                    <label class="appearance-option"><input type="radio" name="theme-color" checked> Light</label>
+                    <label class="appearance-option"><input type="radio" name="theme-color"> Dark</label>
                 </div>
             </div>
         </div>
@@ -828,14 +892,21 @@ function openNav() { if (window.innerWidth > 950) return; document.getElementByI
 function closeNav() { document.getElementById('side-nav').classList.remove('open'); const overlay = document.getElementById('nav-overlay'); overlay.classList.remove('open'); setTimeout(() => { overlay.style.display = 'none'; }, 400); }
 
 const baseText1 = " represents a cornerstone of our hospitality offerings. It is meticulously designed to cater to the specific atmospheric and culinary requirements of our guests.";
-const baseText2 = "Originating from classical hospitality frameworks, this format has been modernized to meet contemporary expectations.";
+const baseText2 = "Originating from classical hospitality frameworks, this format has been modernized to meet contemporary expectations, blending traditional charm with modern efficiency.";
 
-const services = ["Normal reserve", "Buffet", "Candle Light Dinner", "Couple theme table", "Birthday theme", "Friend theme", "Solo Theme", "Family theme", "Roof Top", "Business theme", "Party theme"].map((title, i) => ({ 
-    title, 
-    img: `https://picsum.photos/seed/${i + 15}/600/400`, 
-    p1: `The ${title}${baseText1}`, 
-    p2: baseText2 
-}));
+const services = [
+    { title: "Normal reserve", img: "Private_Booking.png", p1: `The Normal reserve${baseText1}`, p2: baseText2 },
+    { title: "Buffet", img: "Buffet.jpg", p1: `The Buffet${baseText1}`, p2: baseText2 },
+    { title: "Candle Light Dinner", img: "Candel_Light.png", p1: `The Candle Light Dinner${baseText1}`, p2: baseText2 },
+    { title: "Couple theme table", img: "Couple.png", p1: `The Couple theme table${baseText1}`, p2: baseText2 },
+    { title: "Birthday theme", img: "Birthday.png", p1: `The Birthday theme${baseText1}`, p2: baseText2 },
+    { title: "Friend theme", img: "Friends theme.png", p1: `The Friend theme${baseText1}`, p2: baseText2 },
+    { title: "Solo Theme", img: "Solo.jpg", p1: `The Solo Theme${baseText1}`, p2: baseText2 },
+    { title: "Family theme", img: "Family.png", p1: `The Family theme${baseText1}`, p2: baseText2 },
+    { title: "Roof Top", img: "Roof_top.png", p1: `The Roof Top${baseText1}`, p2: baseText2 },
+    { title: "Business theme", img: "Bussiness.png", p1: `The Business theme${baseText1}`, p2: baseText2 },
+    { title: "Party theme", img: "Party.png", p1: `The Party theme${baseText1}`, p2: baseText2 }
+];
 
 const diaryView = document.getElementById('diary-view');
 const numPapers = 7;
@@ -934,7 +1005,7 @@ ropeView.appendChild(monkeyContainer);
 function openModal(index) {
     const data = services[index];
     const isMobile = window.innerWidth <= 950;
-    const taglineText = isMobile ? "Spice Route Theme Overview" : "From Wikipedia, the free encyclopedia";
+    const taglineText = "From Wikipedia, the free encyclopedia";
 
     document.getElementById('wiki-content').innerHTML = `
         <div class="wiki-content-area">
@@ -945,26 +1016,45 @@ function openModal(index) {
             <div class="wiki-body">
                 <aside class="infobox">
                     <div class="infobox-title">${data.title}</div>
-                    <img src="${data.img}" alt="Setup">
-                    <div class="infobox-caption">A visual representation of the ${data.title.toLowerCase()} service.</div>
-                    <table class="desktop-only">
-                        <tr><th>Location</th><td>Kolkata, WB</td></tr>
-                        <tr><th>Type</th><td>Dining Concept</td></tr>
+                    <img src="${data.img}" alt="Service Illustration">
+                    <div class="infobox-caption">A visual representation of the ${data.title.toLowerCase()} setup at The Spice Route.</div>
+                    <table>
+                        <tr><th>Location</th><td>Kolkata, India</td></tr>
+                        <tr><th>Category</th><td>Dining service</td></tr>
+                        <tr><th>Status</th><td>Active</td></tr>
                     </table>
                 </aside>
+                
                 <div class="wiki-main-text">
-                    <p><b>${data.title}</b> is a flagship culinary experience at The Spice Route. ${data.p1}</p>
-                    <h2>Background</h2>
+                    <p><b>${data.title}</b> is a specialized culinary service model provided by <i>The Spice Route</i>. ${data.p1}</p>
+                    
+                    <div class="wiki-toc">
+                        <div class="toc-title">Contents</div>
+                        <ul class="toc-list">
+                            <li>1 History</li>
+                            <li>2 Features</li>
+                            <li>3 See also</li>
+                            <li>4 References</li>
+                        </ul>
+                    </div>
+
+                    <h2>History</h2>
                     <p>${data.p2}</p>
+                    <p>The concept was initially introduced to bridge the gap between casual and formal dining, providing guests with a curated environment that enhances the sensory experience of Indian cuisine.</p>
+                    
+                    <h2>Features</h2>
+                    <p>Standard implementations of the ${data.title.toLowerCase()} include premium table settings, personalized service, and atmospheric lighting adjusted to the theme's requirements.</p>
                 </div>
             </div>
         </div>`;
-    document.getElementById('detail-modal').style.display = isMobile ? 'flex' : 'block';
+    
+    document.getElementById('detail-modal').style.display = isMobile ? 'block' : 'block';
 }
 
 function closeModal() { document.getElementById('detail-modal').style.display = 'none'; }
+
 document.getElementById('detail-modal').addEventListener('click', function(e) {
-    if (e.target === this && window.innerWidth <= 950) closeModal();
+    if (e.target === this) closeModal();
 });
 </script>
 </body>
